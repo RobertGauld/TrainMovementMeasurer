@@ -4,6 +4,13 @@
 
 This is a project to to measure the scale speed and acceleration of a model train moving along a piece of straight track. I hope I've managed to document it such that someone just starting out with their [Arduino](https://www.arduino.cc/) adventure can follow along and create their own. If you're not a beginner you'll likely want to skim through rather than completely read this readme.
 
+[Why?](#why)\
+[The Physics & Maths](#the-physics-maths)\
+[The Electronics](#the-electronics)\
+[The Tunnel](#the-tunnel)\
+
+---
+
 ## Why?
 
 By measuring the scale speed of a train you're able to more easily speed match across a fleet of [DCC](https://wikipedia.org/wiki/Digital_Command_Control "Digital Command Control on Wikipedia") equipped locomotives, or learn what a realistic running speed looks like. By also measuring acceleration you're able to automate the speed matching (if you're feeling adventurous) by only paying attention to readings once the train has clearly reached the desired speed step or learn how not to make your passengers spill their coffee.
@@ -12,32 +19,35 @@ By measuring the scale speed of a train you're able to more easily speed match a
 
 We're going to assume that the track is a 20cm long straight length (curves are possible you just need to be careful with measuring how far the train travels between different triggers - the maths is then the same). Physicists normally love simplifying things down to spheres in a vacuum, however for us it's simpler to consider our train to be a solid cube travelling along a straight line (our track). The fact the front of our train isn't exactly a cube doesn't matter as assuming the triggers are all at the same height above the rail the same part of the train will trigger each of them.
 
-As we learnt and school speed is calculated by dividing distance travelled by time taken.
-_s = d ÷ t_
+As we learnt and school speed is calculated by dividing distance travelled by time taken.\
+_s = d ÷ t_\
 To keep things simple we'll stick to metric so we end up with a measurement in m/s (meters per second). Since we know the distance between our triggers it's as simple is timing how long elapses between two triggers being triggered.
-In the same way as speed measures the rate at which distance changes acceleration measures the rate at which speed changes, since we're working in metric this is in meters per second per second or m/s² (in the following formula Δ represents the change in a value).
-_a = Δs ÷ t_
+In the same way as speed measures the rate at which distance changes acceleration measures the rate at which speed changes, since we're working in metric this is in meters per second per second or m/s² (in the following formula Δ represents the change in a value).\
+_a = Δs ÷ t_\
 At this point we can do some conversions to get from m/s and m/s² into something a bit more meaningful:
 * Multiply by 3.6 * scale to get Km/h or Km/h/s
 * Multiply by 2.236936 * scale to get mph or mph/s
 
-Now we now the basics, let's discover how to use three detectors to measure three speeds and one acceleration.
-d₁ is the distance between the first two triggers.
-d₂ is the distance between the last two triggers.
-d is the total distance (_d₁ + d₂_).
-t₁ is the time between the first two triggers.
-t₂ is the time between the last two triggers.
-t is the total time (_t₁ + t₂_).
-s₁ is the speed between the first two triggers.
-s₂ is the speed between the last two triggers.
-s is the speed between the first and last detector.
-a is the acceleration between the first and last detector.
-From the above we can easily calculate our speeds using:
-_s₁ = d₁ ÷ t₁_
-_s₂ = d₂ ÷ t₂_
-_s = d ÷ t_
-From here we have to understand that if the train is accelerating at a constant rate (which we're going to assume it is to keep things simple) then the speeds s₁ and s₂ occur at the times ½t₁ and ½t₂ (that is to say half way through each gap between detectors). We can therefore calculate the speed change and acceleration using:
-_Δs = s₂ - s₁_
+Now we now the basics, let's discover how to use three detectors to measure three speeds and one acceleration:\
+d₁ is the distance between the first two triggers.\
+d₂ is the distance between the last two triggers.\
+d is the total distance (_d₁ + d₂_).\
+t₁ is the time between the first two triggers.\
+t₂ is the time between the last two triggers.\
+t is the total time (_t₁ + t₂_).\
+s₁ is the speed between the first two triggers.\
+s₂ is the speed between the last two triggers.\
+s is the speed between the first and last detector.\
+a is the acceleration between the first and last  detector.
+
+![](ReadmeMathsDiagram.svg)
+
+From the above we can easily calculate our speeds using:\
+_s₁ = d₁ ÷ t₁_\
+_s₂ = d₂ ÷ t₂_\
+_s = d ÷ t_\
+From here we have to understand that if the train is accelerating at a constant rate (which we're going to assume it is to keep things simple) then the speeds s₁ and s₂ occur at the times ½t₁ and ½t₂ (that is to say half way through each gap between detectors). We can therefore calculate the speed change and acceleration using:\
+_Δs = s₂ - s₁_\
 _a = Δs ÷ ½t_
 
 ## The Electronics
