@@ -289,13 +289,15 @@ void setup()  {
   display.drawBitmap((SCREEN_WIDTH - LOGO_WIDTH)/2, (SCREEN_HEIGHT - LOGO_HEIGHT)/2, logoBmp, LOGO_WIDTH, LOGO_HEIGHT, SSD1306_WHITE);
   display.display();
 
-  pinMode(GATE_LED_PIN, OUTPUT);
-  #ifndef GATE_LED_CONSTANT
-    // Generate a 38KHz square wave on pin 11 using timer 2
-    TCCR2A =  _BV(WGM21);           // CTC
-    TCCR2B = _BV(CS20);             // No prescaler
-    OCR2A =  210;                   // compare A register value (210 * clock speed)
-                                    //  = 13.125 nS , so frequency is 1 / (2 * 13.125) = 38095
+  #ifdef GATE_LED_PIN
+    pinMode(GATE_LED_PIN, OUTPUT);
+    #ifndef GATE_LED_CONSTANT
+      // Generate a 38KHz square wave on pin 11 using timer 2
+      TCCR2A =  _BV(WGM21);           // CTC
+      TCCR2B = _BV(CS20);             // No prescaler
+      OCR2A =  210;                   // compare A register value (210 * clock speed)
+                                      //  = 13.125 nS , so frequency is 1 / (2 * 13.125) = 38095
+    #endif
   #endif
 
   Serial.print(F("READY: SCALE:1:"));
@@ -808,20 +810,17 @@ void gateDisplay(byte gate, uint16_t x, uint16_t y) {
 
 // Switch the IR LEDs on or off
 void irLeds(boolean state) {
-#ifndef GATE_LED_CONSTANT
-  if (state)
-  {
-    TCCR2A = TCCR2A | _BV(COM2A0); // Toggle OC2A on compare match
-  }
-  else
-  {
-    TCCR2A = TCCR2A ^ _BV(COM2A0); // Dont't toggle OC2A on compare match
-  }
-#else
-  digitalWrite(GATE_LED_PIN, state);
-#endif
+  #ifdef GATE_LED_PIN
+    #ifndef GATE_LED_CONSTANT
+      if(state) {
+        TCCR2A = TCCR2A | _BV(COM2A0);  // Toggle OC2A on compare match
+      } else {
+        TCCR2A = TCCR2A ^ _BV(COM2A0);  // Dont't toggle OC2A on compare match
+      }
+    #else
+      digitalWrite(GATE_LED_PIN, state);
+    #endif
 
-  if (state) {
-    delay(10);
-  } // Give detectors time to settle once turned on
+    if(state) {delay(10);} // Give detectors time to settle once turned on
+  #endif
 }

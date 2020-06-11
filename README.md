@@ -8,6 +8,7 @@ This is a project to to measure the scale speed and acceleration of a model trai
 [The Physics & Maths](#the-physics-maths)\
 [The Electronics](#the-electronics)\
 [The Tunnel](#the-tunnel)\
+[Options](#options)
 
 ---
 
@@ -71,3 +72,13 @@ The code goes through a number of steps when the Arduino receives power:
 5. **Wait for the final light gate to be blocked** - We save when this happened. The LEDs are used to show that this time has been saved. We now have gathered all the data we need.
 6. **Calculate** - We now use the time differences to calculate two speeds and an acceleration. These are then scaled and displayed on the display. The LEDs now show a bar of varying colours - the more LEDs the faster the scale speed. All the calculated values are output to the serial port too (see [SERIAL_PORT.md](SERIAL_PORT.md)).
 1. **Wait** - After the configurable time delay (defaults to 15 seconds) we start checking the light gates again, when they're all clear we loop back around to step 2.
+
+## Options
+
+### Without Light Gates
+
+The only function which the light gates serve is to detect when the train is at specific spots on the track. This could alternativly be achieved in a number of different ways e.g. a button operated by a person or the train's wheels. You will need to make your own adjustments to the circuitry:
+* Remove C1, C2, C3, R1, R2, R3, R4, R5, R6, R7, T1, LED1, LED2, LED3 and the IR detectors
+* Make sure that you configure GATE_PINS to contain the Arduino pins connected to your detectors
+* Remove/comment the "#define GATE_LED_PIN" line
+* Ensure you set GATE_BROKEN correctly
