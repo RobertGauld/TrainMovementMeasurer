@@ -25,7 +25,7 @@ Mainly for debugging, the message cycles between:
 
 Additionally when a test mode is used you'll get something like "Testing light gates.".
 
-### DATA
+### VA_DATA
 A list of the configured, measured and calculated data, it's space delimited and units are included, in order the fields are:
 * scale (e.g. 1:148)
 * distance between the first pair of light gates (millimetres)
@@ -41,5 +41,16 @@ A list of the configured, measured and calculated data, it's space delimited and
 * scale acceleration (kilometres per hour per second)
 * scale velocity (miles per hour)
 * scale acceleration (miles per hour per second)
+
+Where first and second are determined by the order the train triggered them not their order on the track.
+
+### V_DATA
+A list of the configured, measured and calculated data, it's space delimited and units are included, in order the fields are:
+* scale (e.g. 1:148)
+* distance between the light gates (millimetres)
+* time between the light gates (milliseconds)
+* velocity between the light gates (meters per second)
+* scale velocity (kilometres per hour)
+* scale velocity (miles per hour)
 
 Where first and second are determined by the order the train triggered them not their order on the track.

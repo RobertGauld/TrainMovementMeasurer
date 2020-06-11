@@ -68,9 +68,9 @@ The code goes through a number of steps when the Arduino receives power:
 1. **Setup** - The Arduino gets itself and he screen up and going.
 2. **Check** - That the sensors are clear, if not you'll get an error and the display and LEDs will be used to show you which sensors are clear/blocked.
 3. **Wait For the light gate at either end to be blocked** - We save when this happened, since we know what direction the train is travelling in we keep track of what the exiting light gate will be too. The LEDs are used to show the direction of travel and that the first time has been saved.
-4. **Wait for the middle light gate to be blocked** - We save when this happened. The LEDs are used to show that this time has been saved.
+4. **Wait for the middle light gate to be blocked** - We save when this happened. The LEDs are used to show that this time has been saved. Skipped if measuring speed only.
 5. **Wait for the final light gate to be blocked** - We save when this happened. The LEDs are used to show that this time has been saved. We now have gathered all the data we need.
-6. **Calculate** - We now use the time differences to calculate two speeds and an acceleration. These are then scaled and displayed on the display. The LEDs now show a bar of varying colours - the more LEDs the faster the scale speed. All the calculated values are output to the serial port too (see [SERIAL_PORT.md](SERIAL_PORT.md)).
+6. **Calculate** - We now use the time differences to calculate two speeds and an acceleration (or just the speed). These are then scaled and displayed on the display. The LEDs now show a bar of varying colours - the more LEDs the faster the scale speed. All the calculated values are output to the serial port too (see [SERIAL_PORT.md](SERIAL_PORT.md)).
 1. **Wait** - After the configurable time delay (defaults to 15 seconds) we start checking the light gates again, when they're all clear we loop back around to step 2.
 
 ## Options
@@ -82,3 +82,10 @@ The only function which the light gates serve is to detect when the train is at 
 * Make sure that you configure GATE_PINS to contain the Arduino pins connected to your detectors
 * Remove/comment the "#define GATE_LED_PIN" line
 * Ensure you set GATE_BROKEN correctly
+
+### Measure Speed Only
+
+With the current code this is easily achieved by:
+* Setting DISTANCE_1 to 0
+* Removing the third value from GATE_PINS
+* The following components may also be omitted from the build: R7, LED3, C3, R4, Detector connected to C3, Link between I14 and I24. Although the must be installed if in the future you decide to measure acceleration too.

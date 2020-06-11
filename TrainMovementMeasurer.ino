@@ -40,6 +40,12 @@
  *          =========|========================|========================|========
  *                 Gate 0                   Gate 1                   Gate 2
  * 
+ * Alternativly you can use two light gates placed along a track you measure just velocity.
+ * Set DISTANCE_1 to zero if you wish to do this.
+ *                   |    <- DISTANCE_0 ->    |
+ *          =========|========================|=================================
+ *                 Gate 0                   Gate 1
+ * 
  * After calculating the scale velocity and acceleration are displayed on the right had side of the screen
  * and output to the serial port. This information will remain on the screen for INTER_TRAIN_DELAY
  * milliseconds (originally 15000) or until the train has completly left the tunnel (whichever is longer).
@@ -50,41 +56,6 @@
  *     ~ The state of the captured times (last 3 LEDs) [Yellow is uncaptured, blue is captured].
  *     ~ The direction of the trains travel (last half of the middle for 0->1->2, first half for 2->1->0).
  *   - A velocity bar, controlled by velocityBarValues[].
- * 
- * The serial port runs at 9600 baud, 8 data bits, no parity, 1 stop bit.
- * Each message output to the serial port matches the format <TYPE>: <MESSAGE>
- * The available types are:
- *   - ERROR    An error condition has occured, see the message for more details.
- *              e.g. if something is in the tunnel on startup
- *              If it's a terminal error (the program can not continue) then additionally
- *              the display will (if it's been able to get going) display the message and flash,
- *              the LED strip will flash alternatly red/white and the on board LED will flash.
- *   - READY    Denotes that the unit is setup and ready for use, lists the configuration of the
- *              unit in a space delimited list of <DESCRIPTION>:<VALUE> fields.
- *   - STATUS   Mainly for debugging, the message cycles between:
- *                - Waiting for train.
- *                - Timing train.
- *                - Calculating.
- *              Additionally when a test mode is used you'll get:
- *                - Testing light gates.
- *                - Testing LEDs.
- *   - DATA     A list of the configured, measured and calculated data, it's space delimited and
- *              units are included, in order the fields are:
- *                - scale (e.g. 1:148)
- *                - distance between the first pair of lightgates (millimeters)
- *                - distance between the second pair of lightgates (millimeters)
- *                - total time (milliseconds)
- *                - time between first pair of light gates (milliseconds)
- *                - time between second pair of light gates (milliseconds)
- *                - velocity over whole distance (meters per second)
- *                - velocity between first pair of light gates (meters per second)
- *                - velocity between second pair of light gates (meters per second)
- *                - acceleration (meters per second per second)
- *                - scale velocity (kilometers per hour)
- *                - scale acceleration (kilometers per hour per second)
- *                - scale velocity (miles per hour)
- *                - scale acceleration (miles per hour per second)
- * The serial port is not checked for input.
  * 
  * The onboard LED has three states:
  *   - On - Running setup
@@ -130,6 +101,12 @@
 #define SCALE         148           // Scale for calculating scale velocity/acceleration
                                     // (1:SCALE, may be integer or floating point)
 #define INTER_TRAIN_DELAY  15000    // Display the train's measaurements for at least this long (milliseconds)
+#if DISTANCE_0 < 1
+  #error "DISTANCE_0 must be at least 1"
+#endif
+#if DISTANCE_1 < 0
+  #error "DISTANCE_0 must be at least 0"
+#endif
 
 
 // Defines for light gates
@@ -225,7 +202,7 @@ struct VelocityBarValue {
   byte velocity;
   CRGB color;
 };
-const VelocityBarValue veloctyBar[LEDS_COUNT] = {
+const VelocityBarValue velocityBar[LEDS_COUNT] = {
   {0,   {0, 255, 0}},
   {20,  {0, 255, 0}},
   {40,  {0, 255, 0}},
@@ -235,8 +212,7 @@ const VelocityBarValue veloctyBar[LEDS_COUNT] = {
   {120, {255, 255, 0}},
   {140, {255, 0, 0}}
 };
-VelocityBarValue* velocityBarValues = veloctyBar;
-
+VelocityBarValue* velocityBarValues = velocityBar;
 
 /* Pins used:
  *  Digital 0:  Serial RX
@@ -262,6 +238,10 @@ VelocityBarValue* velocityBarValues = veloctyBar;
  *  Analog  6:  
  *  Analog  7:  
  */
+
+#if DISTANCE_1 <= 0
+  #define VELOCITY_ONLY
+#endif
 
 
 /* Use test LEDs mode.
@@ -303,8 +283,7 @@ void setup()  {
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_I2C_ADDRESS)) {
-    //Serial.println(F("ERROR: SSD1306 allocation failed."));
-    terminalError(F("ERROR: SSD1306 allocation failed."), false);
+    terminalError(F("ERROR: SSD1306 allocation failed"), false);
   }
   display.setRotation(SCREEN_ROTATION);
   display.clearDisplay();
@@ -312,6 +291,16 @@ void setup()  {
   display.setTextWrap(false);
   display.drawBitmap((SCREEN_WIDTH - LOGO_WIDTH)/2, (SCREEN_HEIGHT - LOGO_HEIGHT)/2, logoBmp, LOGO_WIDTH, LOGO_HEIGHT, SSD1306_WHITE);
   display.display();
+
+  #ifdef VELOCITY_ONLY
+    if(sizeof(GATE_PINS) < (sizeof(GATE_PINS[0]) * 2)) {
+      terminalError(F("Two light gates are required to measure velocit"));  // Turns out this is the longest usable String
+    }
+  #else
+    if(sizeof(GATE_PINS) < (sizeof(GATE_PINS[0]) * 3)) {
+      terminalError(F("Three light gates are required to measure accel"));  // Turns out this is the longest usable String
+    }
+  #endif
 
   #ifdef GATE_LED_PIN
     pinMode(GATE_LED_PIN, OUTPUT);
@@ -332,6 +321,11 @@ void setup()  {
   Serial.print(DISTANCE_1);
   Serial.print(F("mm INTER_TRAIN_DELAY:"));
   Serial.print(INTER_TRAIN_DELAY);
+  #ifdef VELOCITY_ONLY
+    Serial.print(F("ms MEASURING:VELOCITY"));
+  #else
+    Serial.print(F("ms MEASURING:ACCELERATION_VELOCITY"));
+  #endif
   Serial.println();
 
   afterSetupAnimation();
@@ -346,7 +340,11 @@ void loop() {
     testGates();
   #endif
 
-  doVelocityAcceleration();
+  #ifdef VELOCITY_ONLY
+    doVelocity();
+  #else
+    doVelocityAcceleration();
+  #endif
 }
 
 void testLeds() {
@@ -426,14 +424,14 @@ void testLeds() {
 void resultsVelocityAcceleration(unsigned long time1, unsigned long time2, unsigned int distance1, unsigned int distance2) {
   updateStatus("Calculating");
   const unsigned long time = time1 + time2;
-  const float velocity = ((distance1 + distance2) / 1000.0) / (time / 1000.0); // m/s
-  const float velocity1 = (distance1 / 1000.0) / (time1 / 1000.0);  // m/s
-  const float velocity2 = (distance2 / 1000.0) / (time2 / 1000.0);  // m/s
-  const float deltaV = velocity2 - velocity1;                       // m/s
-  const float deltaT = time / 2000.0;                               // s     (0.5*t1 + 0.5*t2 is average of both times)
-  const float acceleration = deltaV / deltaT;                       // m/s2
-  const float scaleVelocity = velocity * 2.236936 * SCALE;          // mph
-  const float scaleAcceleration = acceleration * 2.236936 * SCALE;  // mph/s
+  const float velocity = calcVelocity((distance1 + distance2), time); // m/s
+  const float velocity1 = calcVelocity(distance1, time1);             // m/s
+  const float velocity2 = calcVelocity(distance2, time2);             // m/s
+  const float deltaV = velocity2 - velocity1;                         // m/s
+  const float deltaT = time / 2000.0;                                 // s   (0.5*t1 + 0.5*t2 is average of both times)
+  const float acceleration = deltaV / deltaT;                         // m/s2
+  const float scaleVelocity = scaleImperial(velocity);                // mph
+  const float scaleAcceleration = scaleImperial(acceleration);        // mph/s
 
   // Show results
   const unsigned int colCalculatedNumber = SCREEN_WIDTH - 64;
@@ -461,10 +459,10 @@ void resultsVelocityAcceleration(unsigned long time1, unsigned long time2, unsig
   display.display();
 
   // Output results to serial port
-  // DATA: <scale> <distance 1> <distance 2> <direction> <total time> <1st pair time> <2nd pair time>
+  // VA_DATA: <scale> <distance 1> <distance 2> <direction> <total time> <1st pair time> <2nd pair time>
   // <total velocity> <1st pair velocity> <2nd pair velocity> <acceleration>
   // <scale velocty metric> <scale acceleration metric> <scale velocty imperial> <scale acceleration imperial>
-  Serial.print(F("DATA: 1:"));
+  Serial.print(F("VA_DATA: 1:"));
   Serial.print(SCALE);
   Serial.print(F(" "));
   Serial.print(distance1);
@@ -494,14 +492,72 @@ void resultsVelocityAcceleration(unsigned long time1, unsigned long time2, unsig
   Serial.print(scaleAcceleration, 2);
   Serial.println(F("mph/s "));
 
-  // Show velocity on LEDs
+  showVelocityBar(scaleVelocity);
+  delay(INTER_TRAIN_DELAY);
+}
+
+// Calculate results and output to screen, LEDs and serial
+// time in milliseconds
+// Then wait for INTER_TRAIN_DELAY ms
+void resultsVelocity(unsigned long time) {
+  updateStatus("Calculating");
+  const float velocity = calcVelocity(DISTANCE_0, time);  // m/s
+  const float scaleVelocity = scaleImperial(velocity);    // mph
+
+  // Show results
+  const unsigned int colCalculatedNumber = SCREEN_WIDTH - 64;
+  const unsigned int colCalculatedUnit = colCalculatedNumber + (3 * 2 * SCREEN_CHAR_WIDTH);
+  clearSubScreen();
+  display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+  // Scale Velocity
+  display.setTextSize(1);
+  display.setCursor(colCalculatedUnit, SCREEN_LINE_2);
+  display.print(F("mph"));
+  display.setTextSize(2);
+  display.setCursor((scaleVelocity > 10 && scaleVelocity < 100 ? (colCalculatedNumber + (2 * SCREEN_CHAR_WIDTH)) : colCalculatedNumber), SCREEN_LINE_1);
+  display.print(scaleVelocity, (abs(scaleVelocity) < 10 ? 1 : 0));
+  display.display();
+
+  // Output results to serial port
+  // V_DATA: <scale> <distance 1> <distance 2> <direction> <total time> <1st pair time> <2nd pair time>
+  // <total velocity> <1st pair velocity> <2nd pair velocity> <acceleration>
+  // <scale velocty metric> <scale acceleration metric> <scale velocty imperial> <scale acceleration imperial>
+  Serial.print(F("V_DATA: 1:"));
+  Serial.print(SCALE);
+  Serial.print(F(" "));
+  Serial.print(DISTANCE_0);
+  Serial.print(F("mm "));
+  Serial.print(time);
+  Serial.print(F("ms "));
+  Serial.print(velocity, 2);
+  Serial.print(F("m/s "));
+  Serial.print((velocity * 3.60 * SCALE), 2);
+  Serial.print(F("km/h "));
+  Serial.print(scaleVelocity, 2);
+  Serial.println(F("mph "));
+
+  showVelocityBar(scaleVelocity);
+  delay(INTER_TRAIN_DELAY);
+}
+
+// Calculate velocity (m/s) from distance (mm) and time (ms)
+float calcVelocity(unsigned int distance, unsigned int time) {
+  return (DISTANCE_0 / 1000.0) / (time / 1000.0);
+}
+
+// Calculate scaled value and convert to imperial
+// m/s/ -> mph, m/s/s -> mph/s
+float scaleImperial(float value) {
+  return value * 2.236936 * SCALE;
+}
+
+// Show velocity on LEDs
+void showVelocityBar(float scaleVelocity) {
   FastLED.clear();
   for (unsigned int i = 0; i < LEDS_COUNT; i++) {
     leds[LED_RINDEX(i)] = scaleVelocity > velocityBarValues[i].velocity ? velocityBarValues[i].color : CRGB::Black;
   }
   FastLED.show();
-
-  delay(INTER_TRAIN_DELAY);
 }
 
 void updateStatus(String status) {
@@ -621,9 +677,15 @@ void clearSubScreen() {
   display.fillRect(0, SCREEN_LINE_3, 64, SCREEN_HEIGHT, SSD1306_BLACK);
 }
 
+#ifdef VELOCITY_ONLY
+  #define GATE_COUNT 2
+#else
+  #define GATE_COUNT 3
+#endif
+
 void doVelocityAcceleration() {
-  unsigned long times[3];    // The value of millis() when the first, second and third light gate was triggered
-  unsigned int distances[2]; // The distances to use in calculations (assigned based on direction of travel)
+  unsigned long times[3];     // The value of millis() when the first, second and third light gate was triggered
+  unsigned int distances[2];  // The distances to use in calculations (assigned based on direction of travel)
   irLeds(true);
   clearScreen();
   FastLED.clear();
@@ -633,19 +695,15 @@ void doVelocityAcceleration() {
   if (trainInLightGates()) {
     showError(F("Sensors not clear"));
     unsigned long continueAt = -1;
-    while (continueAt > millis())
-    {
-      if (trainInLightGates())
-      {
+    while (continueAt > millis()) {
+      if (trainInLightGates()) {
         continueAt = millis() + INTER_TRAIN_DELAY;
         display.fillRect(0, SCREEN_LINE_3, SCREEN_WIDTH, SCREEN_CHAR_HEIGHT, SSD1306_WHITE);
         display.setTextSize(1);
         display.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
         display.setCursor(((SCREEN_WIDTH - (SCREEN_CHAR_WIDTH * 17)) / 2), SCREEN_LINE_3);
         display.print(F("Clear the sensors"));
-      }
-      else
-      {
+      } else {
         display.fillRect(0, SCREEN_LINE_3, SCREEN_WIDTH, SCREEN_CHAR_HEIGHT, SSD1306_BLACK);
         display.setTextSize(1);
         display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
@@ -676,19 +734,14 @@ void doVelocityAcceleration() {
   while (gateClear(0) && gateClear(2)) {showGateStates();}
   times[0] = millis();
   const byte endGate = gateBroken(0) ? 2 : 0;
-  if (endGate == 2) {
+  if(endGate == 2) {
     // Train is moving 0 -> 1 -> 2
-    for (unsigned int i = 3; i < LEDS_COUNT / 2; i++)
-    {
-      leds[LED_INDEX(i)] = CRGB::Magenta;
-    }
+    for(unsigned int i = 3; i < LEDS_COUNT / 2; i++) { leds[LED_INDEX(i)] = CRGB::Magenta; }
     distances[0] = DISTANCE_0;
     distances[1] = DISTANCE_1;
   } else {
     // Train is moving 2 -> 1 -> 0
-    for (unsigned int i = LEDS_COUNT / 2; i < LEDS_COUNT - 3; i++) {
-      leds[LED_INDEX(i)] = CRGB::Magenta;
-    }
+    for(unsigned int i = LEDS_COUNT / 2; i < LEDS_COUNT - 3; i++) { leds[LED_INDEX(i)] = CRGB::Magenta; }
     distances[0] = DISTANCE_1;
     distances[1] = DISTANCE_0;
   }
@@ -697,13 +750,13 @@ void doVelocityAcceleration() {
   updateStatus("Timing train");
 
   // Wait for the train to reach the middle
-  while (gateClear(1)) {showGateStates();}
+  while(gateClear(1)) { showGateStates(); }
   times[1] = millis();
   leds[LED_RINDEX(1)] = CRGB::Blue;
   FastLED.show();
 
   // Wait for the train to reach the end
-  while (gateClear(endGate)) {showGateStates();}
+  while(gateClear(endGate)) { showGateStates(); }
   times[2] = millis();
   leds[LED_RINDEX(2)] = CRGB::Blue;
   FastLED.show();
@@ -711,6 +764,81 @@ void doVelocityAcceleration() {
   // Calculate and display results
   irLeds(false);
   resultsVelocityAcceleration((times[1] - times[0]), (times[2] - times[1]), distances[0], distances[1]);
+  irLeds(true);
+
+  // Wait for light gates to be clear
+  while (trainInLightGates());
+}
+
+void doVelocity() {
+  unsigned long times[2];     // The value of millis() when the first and second light gate was triggered
+  irLeds(true);
+  clearScreen();
+  FastLED.clear();
+
+  // Ensure all light gates are clear
+  // Once they're all clear ensure they stay that way for at least INTER_TRAIN_DELAY milliseconds
+  if (trainInLightGates()) {
+    showError(F("Sensors not clear"));
+    unsigned long continueAt = -1;
+    while(continueAt > millis()) {
+      if (trainInLightGates()) {
+        continueAt = millis() + INTER_TRAIN_DELAY;
+        display.fillRect(0, SCREEN_LINE_3, SCREEN_WIDTH, SCREEN_CHAR_HEIGHT, SSD1306_WHITE);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
+        display.setCursor(((SCREEN_WIDTH - (SCREEN_CHAR_WIDTH * 17)) / 2), SCREEN_LINE_3);
+        display.print(F("Clear the sensors"));
+      } else {
+        display.fillRect(0, SCREEN_LINE_3, SCREEN_WIDTH, SCREEN_CHAR_HEIGHT, SSD1306_BLACK);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+        display.setCursor(((SCREEN_WIDTH - (SCREEN_CHAR_WIDTH * 16)) / 2), SCREEN_LINE_3);
+        display.print(F("Please wait "));
+        display.print((continueAt - millis())/1000.0, 1);
+      }
+      drawGateStates();
+      display.display();
+      showGateStates();
+    }
+    clearScreen();
+  }
+
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+  display.setCursor(0, SCREEN_LINE_0);
+  display.print(F("1:"));
+  display.print(SCALE);
+
+  updateStatus(F("Waiting for train"));
+  leds[LED_RINDEX(0)] = CRGB::Yellow;
+  leds[LED_RINDEX(1)] = CRGB::Yellow;
+  FastLED.show();
+
+  // Wait for a train to enter
+  while (gateClear(0) && gateClear(1)) {showGateStates();}
+  times[0] = millis();
+  const byte endGate = gateBroken(0) ? 1 : 0;
+  if(endGate == 1) {
+    // Train is moving 0 -> 1
+    for(unsigned int i = 2; i < LEDS_COUNT / 2; i++) { leds[LED_INDEX(i)] = CRGB::Magenta; }
+  } else {
+    // Train is moving 1 -> 0
+    for(unsigned int i = LEDS_COUNT / 2; i < LEDS_COUNT - 2; i++) { leds[LED_INDEX(i)] = CRGB::Magenta; }
+  }
+  leds[LED_RINDEX(0)] = CRGB::Blue;
+  FastLED.show();
+  updateStatus("Timing train");
+
+  // Wait for the train to reach the end
+  while(gateClear(endGate)) { showGateStates(); }
+  times[1] = millis();
+  leds[LED_RINDEX(1)] = CRGB::Blue;
+  FastLED.show();
+
+  // Calculate and display results
+  irLeds(false);
+  resultsVelocity((times[1] - times[0]));
   irLeds(true);
 
   // Wait for light gates to be clear
@@ -740,11 +868,11 @@ void testGates() {
   display.print(F("1:"));
   display.print(SCALE);
   display.setCursor(col1, SCREEN_LINE_1);
-#ifdef GATE_LED_CONSTANT
-  display.print(F("Constant"));
-#else
-  display.print(F("Flash"));
-#endif
+  #ifdef GATE_LED_CONSTANT
+    display.print(F("Constant"));
+  #else
+    display.print(F("Flash"));
+  #endif
 
   // Display line 2: Distance 0->1 and 1->2
   display.setCursor(col0, SCREEN_LINE_2);
@@ -752,15 +880,12 @@ void testGates() {
   display.setCursor(col1, SCREEN_LINE_2);
   display.print(DISTANCE_1);
 
-  while (true) {
-    // Show direction indication if only one light gate is broken
-    leds[LED_INDEX(3)] = (gateBroken(0) && gateClear(1) && gateClear(2)) ? CRGB::Magenta : CRGB::Black;
-    leds[LED_INDEX(4)] = (gateClear(0) && gateClear(1) && gateBroken(2)) ? CRGB::Magenta : CRGB::Black;
-
+  while(true) {
     // Display
-    for (unsigned int i = 0; i < 3; i++) {
+    const unsigned int gates = sizeof(GATE_PINS) / sizeof(GATE_PINS[0]);
+    for(unsigned int i = 0; i < gates; i++) {
       // Show pin number and state of light gate on the display
-      if (gateBroken(i)) {
+      if(gateBroken(i)) {
         display.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
       } else {
         display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
@@ -768,12 +893,24 @@ void testGates() {
       display.setTextSize(1);
       display.setCursor((col0 + (SCREEN_CHAR_WIDTH * (3 * i))), SCREEN_LINE_3);
       display.print(GATE_PINS[i]);
+    }
 
+    // Show direction indication if only one light gate is broken
+    #ifdef VELOCITY_ONLY
+      leds[LED_INDEX(3)] = (gateBroken(0) && gateClear(1)) ? CRGB::Magenta : CRGB::Black;
+      leds[LED_INDEX(4)] = (gateClear(0) && gateBroken(1)) ? CRGB::Magenta : CRGB::Black;
+    #else
+      leds[LED_INDEX(3)] = (gateBroken(0) && gateClear(1) && gateClear(2)) ? CRGB::Magenta : CRGB::Black;
+      leds[LED_INDEX(4)] = (gateClear(0) && gateClear(1) && gateBroken(2)) ? CRGB::Magenta : CRGB::Black;
+    #endif
+
+    // LEDs
+    for(unsigned int i = 0; i < GATE_COUNT; i++) {
       // Show current state of the light gate on LED strip
-      leds[LED_INDEX(2 - i)] = gateBroken(i) ? CRGB::Red : CRGB::Green;
+      leds[LED_INDEX(GATE_COUNT - 1 - i)] = gateBroken(i) ? CRGB::Red : CRGB::Green;
 
       // Show if the light gate has ever been broken on LED strip
-      if (gateBroken(i)) {leds[LED_RINDEX(i)] = CRGB::Blue;}
+      if(gateBroken(i)) {leds[LED_RINDEX(i)] = CRGB::Blue;}
     }
     display.display();
     FastLED.show();
@@ -781,25 +918,28 @@ void testGates() {
 }
 
 // Draw the state of all light gates on the screen.
-void drawGateStates()
-{
-  for (unsigned int i = 0; i < 3; i++) {
-    gateDisplay(i, ((SCREEN_WIDTH / 4) * (i + 1)), (SCREEN_LINE_2 - 1));
+void drawGateStates() {
+  const uint16_t spacing = SCREEN_WIDTH / (GATE_COUNT + 1);
+  for(unsigned int i = 0; i < GATE_COUNT; i++) {
+    gateDisplay(i, (spacing * (i + 1)), (SCREEN_LINE_2 - 1));
   }
 }
 
 // Show the state of all light gates on the LEDs.
-void showGateStates()
-{
-  for (unsigned int i = 0; i < 3; i++) {
-    leds[LED_INDEX(2 - i)] = gateBroken(i) ? CRGB::Red : CRGB::Green;
+void showGateStates() {
+  for(unsigned int i = 0; i < GATE_COUNT; i++) {
+    leds[LED_INDEX(GATE_COUNT - 1 - i)] = gateBroken(i) ? CRGB::Red : CRGB::Green;
   }
   FastLED.show();
 }
 
 // Check if a train is present anywhere in the light gates
 boolean trainInLightGates() {
-  return gateBroken(0) || gateBroken(1) || gateBroken(2);
+  #if GATE_COUNT == 2
+    return gateBroken(0) || gateBroken(1);
+  #else
+    return gateBroken(0) || gateBroken(1) || gateBroken(2);
+  #endif
 }
 
 // Check if a light gate is broken
@@ -818,12 +958,9 @@ void gateDisplay(byte gate, uint16_t x, uint16_t y) {
   const uint16_t radiusInner = radiusOuter - 1;
 
   display.fillCircle(x, y, radiusOuter, SSD1306_WHITE);
-  if (gateBroken(gate))
-  {
+  if(gateBroken(gate)) {
     display.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
-  }
-  else
-  {
+  } else {
     display.fillCircle(x, y, radiusInner, SSD1306_BLACK);
     display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
   }
