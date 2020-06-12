@@ -9,10 +9,10 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="svg8"
    version="1.1"
-   viewBox="0 0 175 90"
+   viewBox="0 0 200 90"
    height="90mm"
-   width="175mm"
-   sodipodi:docname="Maths.svg"
+   width="200mm"
+   sodipodi:docname="ReadmeMathsDiagram.svg"
    inkscape:version="0.92.3 (2405546, 2018-03-11)">
   <sodipodi:namedview
      pagecolor="#ffffff"
@@ -23,13 +23,13 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1771"
-     inkscape:window-height="809"
+     inkscape:window-width="1631"
+     inkscape:window-height="1017"
      id="namedview42"
      showgrid="false"
      inkscape:zoom="1.094619"
-     inkscape:cx="356.5163"
-     inkscape:cy="198.86373"
+     inkscape:cx="289.51784"
+     inkscape:cy="149.60814"
      inkscape:window-x="43"
      inkscape:window-y="27"
      inkscape:window-maximized="0"
@@ -49,14 +49,14 @@
     </rdf:RDF>
   </metadata>
   <rect
-     style="fill:#c8c8c8;fill-opacity:1;stroke:#0000ff;stroke-width:0.00781354;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:#c8c8c8;fill-opacity:1;stroke:#0000ff;stroke-width:0.00573669;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      id="rect831"
-     width="13.630896"
-     height="49.277424"
-     x="5.7836595"
-     y="37.20546"
-     rx="10.000116"
-     ry="6.1050882" />
+     width="13.632121"
+     height="26.560524"
+     x="19.012211"
+     y="39.416412"
+     rx="10.001016"
+     ry="3.2906418" />
   <text
      transform="rotate(-90)"
      id="text821"
@@ -67,195 +67,276 @@
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px"
        y="14.157122"
        x="-79.334229"
-       id="tspan819">Light Gate 0</tspan></text>
+       id="tspan819" /></text>
+  <text
+     transform="rotate(-90)"
+     y="27.882929"
+     x="-62.125202"
+     style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     xml:space="preserve"
+     id="text850"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px"
+       y="27.882929"
+       x="-62.125202"
+       id="tspan852">Gate 0</tspan></text>
   <rect
-     ry="6.1050882"
-     rx="10.000116"
-     y="37.20546"
-     x="80.784485"
-     height="49.277424"
-     width="13.630896"
+     ry="3.2906444"
+     rx="10.00164"
+     y="39.416393"
+     x="94.012619"
+     height="26.560547"
+     width="13.632973"
      id="rect4546"
-     style="fill:#c8c8c8;fill-opacity:1;stroke:#0000ff;stroke-width:0.00781354;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+     style="fill:#c8c8c8;fill-opacity:1;stroke:#0000ff;stroke-width:0.00573688;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="-79.261169"
-     y="89.157127"
+     x="-62.125332"
+     y="102.3863"
      id="text4550"
      transform="rotate(-90)"><tspan
        id="tspan4548"
-       x="-79.261169"
-       y="89.157127"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px">Light Gate 1</tspan></text>
+       x="-62.125332"
+       y="102.3863"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px">Gate 1</tspan></text>
   <rect
-     style="fill:#c8c8c8;fill-opacity:1;stroke:#0000ff;stroke-width:0.00781354;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:#c8c8c8;fill-opacity:1;stroke:#0000ff;stroke-width:0.00573688;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      id="rect4556"
-     width="13.630896"
-     height="49.277424"
-     x="155.78529"
-     y="37.20546"
-     rx="10.000116"
-     ry="6.1050882" />
+     width="13.632973"
+     height="26.560547"
+     x="169.01341"
+     y="39.416393"
+     rx="10.00164"
+     ry="3.2906444" />
   <text
      transform="rotate(-90)"
      id="text4560"
-     y="164.1571"
-     x="-79.239136"
+     y="177.38626"
+     x="-62.125332"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      xml:space="preserve"><tspan
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px"
-       y="164.1571"
-       x="-79.239136"
-       id="tspan4558">Light Gate 2</tspan></text>
+       y="177.38626"
+       x="-62.125332"
+       id="tspan4558">Gate 2</tspan></text>
   <path
      inkscape:connector-curvature="0"
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.71933025;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     d="m 19.076975,11.477852 137.012295,0.0606"
+     d="m 32.306141,11.477852 137.012269,0.0606"
      id="path4580" />
   <path
      inkscape:connector-curvature="0"
      id="path4597"
-     d="m 19.087188,18.977852 137.044262,0.0606"
+     d="m 32.316354,18.977852 137.044236,0.0606"
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.71941239;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <path
      inkscape:connector-curvature="0"
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.71937764;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     d="m 19.100435,26.477852 137.031015,0.0606"
+     d="m 32.329601,26.477852 137.030989,0.0606"
      id="path4609" />
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="66.867348"
+     x="80.096519"
      y="10.009486"
      id="text4623"><tspan
        id="tspan4621"
-       x="66.867348"
+       x="80.096519"
        y="10.009486"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px">Known Distance (d)</tspan></text>
   <text
      id="text4627"
      y="17.509485"
-     x="68.215073"
+     x="81.444244"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      xml:space="preserve"><tspan
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px"
        y="17.509485"
-       x="68.215073"
+       x="81.444244"
        id="tspan4625">Measured Time (t)</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="65.687057"
+     x="78.916229"
      y="25.009485"
      id="text4631"><tspan
        id="tspan4629"
-       x="65.687057"
+       x="78.916229"
        y="25.009485"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px">Calculated Speed (s)</tspan></text>
   <path
      inkscape:connector-curvature="0"
      id="path4648"
-     d="m 19.439407,53.819858 61.338294,0.0609"
+     d="m 32.668573,45.882359 61.338294,0.0609"
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.48277354;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <path
      inkscape:connector-curvature="0"
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.48277354;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     d="m 19.439407,61.319858 61.338294,0.0609"
+     d="m 32.668573,53.382359 61.338294,0.0609"
      id="path4650" />
   <path
      inkscape:connector-curvature="0"
      id="path4652"
-     d="m 19.439407,68.819858 61.338294,0.0609"
+     d="m 32.668573,60.882359 61.338294,0.0609"
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.48277354;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <path
      inkscape:connector-curvature="0"
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.48277354;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     d="m 94.410865,53.819858 61.338295,0.0609"
+     d="m 107.64001,45.882359 61.33829,0.0609"
      id="path4654" />
   <path
      inkscape:connector-curvature="0"
      id="path4656"
-     d="m 94.410865,61.319858 61.338295,0.0609"
+     d="m 107.64001,53.382359 61.33829,0.0609"
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.48277354;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <path
      inkscape:connector-curvature="0"
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.48277354;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     d="m 94.410865,68.819858 61.338295,0.0609"
+     d="m 107.64001,60.882359 61.33829,0.0609"
      id="path4658" />
   <text
      id="text4662"
-     y="52.233185"
-     x="28.528477"
+     y="44.295689"
+     x="41.757645"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      xml:space="preserve"><tspan
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px"
-       y="52.233185"
-       x="28.528477"
+       y="44.295689"
+       x="41.757645"
        id="tspan4660">Known Distance (d₁)</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="103.49994"
-     y="52.233185"
+     x="116.7291"
+     y="44.295689"
      id="text4666"><tspan
        id="tspan4664"
-       x="103.49994"
-       y="52.233185"
+       x="116.7291"
+       y="44.295689"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px">Known Distance (d₂)</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="29.876198"
-     y="59.73317"
+     x="43.105362"
+     y="51.795673"
      id="text4670"><tspan
        id="tspan4668"
-       x="29.876198"
-       y="59.73317"
+       x="43.105362"
+       y="51.795673"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px">Measured Time (t₁)</tspan></text>
   <text
      id="text4674"
-     y="59.73317"
-     x="104.84766"
+     y="51.795673"
+     x="118.07682"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      xml:space="preserve"><tspan
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px"
-       y="59.73317"
-       x="104.84766"
+       y="51.795673"
+       x="118.07682"
        id="tspan4672">Measured Time (t₂)</tspan></text>
   <text
      id="text4678"
-     y="67.233162"
-     x="27.348188"
+     y="59.295662"
+     x="40.577354"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      xml:space="preserve"><tspan
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px"
-       y="67.233162"
-       x="27.348188"
+       y="59.295662"
+       x="40.577354"
        id="tspan4676">Calculated Speed (s₁)</tspan></text>
   <text
      xml:space="preserve"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     x="102.31965"
-     y="67.233162"
+     x="115.54881"
+     y="59.295662"
      id="text4682"><tspan
        id="tspan4680"
-       x="102.31965"
-       y="67.233162"
+       x="115.54881"
+       y="59.295662"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px">Calculated Speed (s₂)</tspan></text>
   <path
      id="path885"
-     d="m 19.100435,34.415352 137.031015,0.0606"
+     d="m 32.329601,34.415352 137.030989,0.0606"
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.71937764;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      inkscape:connector-curvature="0" />
   <text
      id="text889"
      y="32.946987"
-     x="58.96912"
+     x="72.198288"
      style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      xml:space="preserve"><tspan
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333311px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px"
        y="32.946987"
-       x="58.96912"
+       x="72.198288"
        id="tspan887">Calculated Acceleration (a)</tspan></text>
+  <rect
+     ry="9.2943621"
+     rx="10.000432"
+     y="-100.8195"
+     x="66.235321"
+     height="75.01976"
+     width="13.631326"
+     id="rect863"
+     style="fill:#9be4ff;fill-opacity:1;stroke:#0000ff;stroke-width:0.009525;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     transform="rotate(90)" />
+  <rect
+     transform="rotate(90)"
+     style="fill:#9be4ff;fill-opacity:1;stroke:#0000ff;stroke-width:0.009525;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect865"
+     width="13.631326"
+     height="75.01976"
+     x="66.235321"
+     y="-175.83923"
+     rx="10.000432"
+     ry="9.2943621" />
+  <path
+     style="fill:#9be4ff;fill-opacity:1;stroke:#0000ff;stroke-width:0.036;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M -0.50195312 250.33789 L -0.50195312 301.85742 L 62.382812 301.85742 C 81.843889 301.85742 97.511719 290.36869 97.511719 276.09766 C 97.511719 261.82662 81.843889 250.33789 62.382812 250.33789 L -0.50195312 250.33789 z "
+     transform="scale(0.26458334)"
+     id="rect867" />
+  <path
+     style="fill:#9be4ff;fill-opacity:1;stroke:#0000ff;stroke-width:0.036;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 699.7168 250.33789 C 680.25572 250.33789 664.58984 261.82662 664.58984 276.09766 C 664.58984 290.36869 680.25572 301.85742 699.7168 301.85742 L 755.50195 301.85742 L 755.50195 250.33789 L 699.7168 250.33789 z "
+     transform="scale(0.26458334)"
+     id="rect874" />
+  <text
+     id="text878"
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="53.486954"
+     y="75.155251"><tspan
+       id="tspan876"
+       x="53.486954"
+       y="75.155251"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px">Track 1</tspan></text>
+  <text
+     y="75.155251"
+     x="128.52878"
+     style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     xml:space="preserve"
+     id="text886"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px"
+       y="75.155251"
+       x="128.52878"
+       id="tspan884">Track 2</tspan></text>
+  <text
+     y="75.261314"
+     x="2.7526712"
+     style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     xml:space="preserve"
+     id="text890"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px"
+       y="75.261314"
+       x="2.7526712"
+       id="tspan888">Track 0</tspan></text>
+  <text
+     id="text894"
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="178.49684"
+     y="75.155251"><tspan
+       id="tspan892"
+       x="178.49684"
+       y="75.155251"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444447px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332px">Track 3</tspan></text>
 </svg>
