@@ -26,8 +26,8 @@ To keep things simple we'll stick to metric so we end up with a measurement in m
 In the same way as speed measures the rate at which distance changes acceleration measures the rate at which speed changes, since we're working in metric this is in meters per second per second or m/s² (in the following formula Δ represents the change in a value).\
 _a = Δs ÷ t_\
 At this point we can do some conversions to get from m/s and m/s² into something a bit more meaningful:
-* Multiply by 3.6 * scale to get Km/h or Km/h/s
-* Multiply by 2.236936 * scale to get mph or mph/s
+* To get Km/h or Km/h/s multiply by 3.6 × scale
+* To get mph or mph/s multiply by 2.236936 × scale
 
 Now we now the basics, let's discover how to use three detectors to measure three speeds and one acceleration:\
 d₁ is the distance between the first two triggers.\
