@@ -110,7 +110,7 @@
 
 
 // Defines for light gates
-const byte GATE_PINS[] = {5, 4, 3}; // Input pins for the light gates
+const PROGMEM uint8_t GATE_PINS[] = {5, 4, 3}; // Input pins for the light gates
 #define GATE_MODE     INPUT         // Input type for the light gates (INPUT or INPUT_PULLUP)
 #define GATE_BROKEN   HIGH          // State of the input when the gate is broken (something is present) (HIGH or LOW)
 #define GATE_LED_PIN  11            // Pin 11 is toggled by timer 2 at 38KHz
@@ -190,29 +190,25 @@ const PROGMEM unsigned char logoBmp[] = {
 };
 
 // Text to put beside logo - maximum 3 lines of 10 chars.
-const String BANNER_LINES[3] = {
-  "Train",
-  "Movement",
-  "Measurer"
-};
+const PROGMEM char BANNER_LINE_0[] = "Train";
+const PROGMEM char BANNER_LINE_1[] = "Movement";
+const PROGMEM char BANNER_LINE_2[] = "Measurer";
+const PROGMEM char *const BANNER_LINES[] = {BANNER_LINE_0, BANNER_LINE_1, BANNER_LINE_2};
 
 
 // Defines for velocity bars
-struct VelocityBarValue {
-  byte velocity;
-  CRGB color;
+const PROGMEM byte velocityBar[LEDS_COUNT * 4] = {
+  // velocity, red, green, blue
+  0,   0, 255, 0,
+  20,  0, 255, 0,
+  40,  0, 255, 0,
+  60,  0, 255, 255,
+  80,  0, 255, 255,
+  100, 255, 255, 0,
+  120, 255, 255, 0,
+  140, 255, 0, 0
 };
-const VelocityBarValue velocityBar[LEDS_COUNT] = {
-  {0,   {0, 255, 0}},
-  {20,  {0, 255, 0}},
-  {40,  {0, 255, 0}},
-  {60,  {0, 255, 255}},
-  {80,  {0, 255, 255}},
-  {100, {255, 255, 0}},
-  {120, {255, 255, 0}},
-  {140, {255, 0, 0}}
-};
-VelocityBarValue* velocityBarValues = velocityBar;
+
 
 /* Pins used:
  *  Digital 0:  Serial RX
@@ -294,11 +290,11 @@ void setup()  {
 
   #ifdef VELOCITY_ONLY
     if(sizeof(GATE_PINS) < (sizeof(GATE_PINS[0]) * 2)) {
-      terminalError(F("Two light gates are required to measure velocit"));  // Turns out this is the longest usable String
+      terminalError(F("Two light gates are required to measure velocity"));
     }
   #else
     if(sizeof(GATE_PINS) < (sizeof(GATE_PINS[0]) * 3)) {
-      terminalError(F("Three light gates are required to measure accel"));  // Turns out this is the longest usable String
+      terminalError(F("Three light gates are required to measure acceleration"));
     }
   #endif
 
@@ -555,7 +551,13 @@ float scaleImperial(float value) {
 void showVelocityBar(float scaleVelocity) {
   FastLED.clear();
   for (unsigned int i = 0; i < LEDS_COUNT; i++) {
-    leds[LED_RINDEX(i)] = scaleVelocity > velocityBarValues[i].velocity ? velocityBarValues[i].color : CRGB::Black;
+    const byte velocity = pgm_read_byte(velocityBar + (i * 4) + 0);
+    const byte red =      pgm_read_byte(velocityBar + (i * 4) + 1);
+    const byte green =    pgm_read_byte(velocityBar + (i * 4) + 2);
+    const byte blue =     pgm_read_byte(velocityBar + (i * 4) + 3);
+    if(scaleVelocity > velocity) {
+      leds[LED_RINDEX(i)] = CRGB(red, green, blue);
+    }
   }
   FastLED.show();
 }
@@ -652,13 +654,17 @@ void afterSetupAnimation() {
     int lineSpacing = (LOGO_HEIGHT - (3 * SCREEN_CHAR_HEIGHT)) / 4;
     top = -SCREEN_CHAR_HEIGHT - (lineSpacing / 2);
     left = SCREEN_WIDTH - (10 * SCREEN_CHAR_WIDTH);
+    char line[11];  // Buffer for holding each line - maximum length of 10 + 1 for teminating null byte
 
     display.setTextColor(SSD1306_WHITE);
     for(int i = 0; i < 3; i++) {
       top += SCREEN_CHAR_HEIGHT + lineSpacing;
       display.setCursor(left, top);
-      for(int j = 0; j < BANNER_LINES[i].length(); j++) {
-        display.print(BANNER_LINES[i].charAt(j));
+
+      strcpy_P(line, (char*)pgm_read_word(&(BANNER_LINES[i]))); // Read line from PROGMEM
+      // Then displat the line once character at a time
+      for(int j = 0; (j < 10 && line[j] != 0); j++) {
+        display.print(line[j]);
         display.display();
         delay(10);
       }
@@ -892,7 +898,7 @@ void testGates() {
       }
       display.setTextSize(1);
       display.setCursor((col0 + (SCREEN_CHAR_WIDTH * (3 * i))), SCREEN_LINE_3);
-      display.print(GATE_PINS[i]);
+      display.print(pgm_read_byte(GATE_PINS + i));
     }
 
     // Show direction indication if only one light gate is broken
@@ -944,12 +950,12 @@ boolean trainInLightGates() {
 
 // Check if a light gate is broken
 boolean gateBroken(byte gate) {
-  return digitalRead(GATE_PINS[gate]) == GATE_BROKEN;
+  return digitalRead(pgm_read_byte(GATE_PINS + gate)) == GATE_BROKEN;
 }
 
 // Check if a light gate is clear
 boolean gateClear(byte gate) {
-  return digitalRead(GATE_PINS[gate]) != GATE_BROKEN;
+  return digitalRead(pgm_read_byte(GATE_PINS + gate)) != GATE_BROKEN;
 }
 
 // Draw the light gate as a circle on the display
