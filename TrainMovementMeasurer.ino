@@ -113,8 +113,8 @@
 const PROGMEM uint8_t GATE_PINS[] = {5, 4, 3}; // Input pins for the light gates
 #define GATE_MODE     INPUT         // Input type for the light gates (INPUT or INPUT_PULLUP)
 #define GATE_BROKEN   HIGH          // State of the input when the gate is broken (something is present) (HIGH or LOW)
-#define GATE_LED_PIN  11            // Pin 11 is toggled by timer 2 at 38KHz
-#define GATE_LED_CONSTANT           // Pin 11 is not flashed but instead on constantly
+#define GATE_LED_PIN  11            // Currently not changable from 11 !!! (it's toggled by timer 2 in hardware)
+#define GATE_LED_RATE 0             // Rate at which to flash the light gate LEDs (Hz, 62-8000000, 0 = constantly on)
 
 
 // Defines for LED stick
@@ -298,16 +298,7 @@ void setup()  {
     }
   #endif
 
-  #ifdef GATE_LED_PIN
-    pinMode(GATE_LED_PIN, OUTPUT);
-    #ifndef GATE_LED_CONSTANT
-      // Generate a 38KHz square wave on pin 11 using timer 2
-      TCCR2A =  _BV(WGM21);           // CTC
-      TCCR2B = _BV(CS20);             // No prescaler
-      OCR2A =  210;                   // compare A register value (210 * clock speed)
-                                      //  = 13.125 nS , so frequency is 1 / (2 * 13.125) = 38095
-    #endif
-  #endif
+  doSetup();
 
   Serial.print(F("READY: SCALE:1:"));
   Serial.print(SCALE);
@@ -874,10 +865,11 @@ void testGates() {
   display.print(F("1:"));
   display.print(SCALE);
   display.setCursor(col1, SCREEN_LINE_1);
-  #ifdef GATE_LED_CONSTANT
+  #if GATE_LED_RATE == 0
     display.print(F("Constant"));
   #else
-    display.print(F("Flash"));
+    display.print(GATE_LED_RATE / 1000.0);
+    display.print(F("KHz"));
   #endif
 
   // Display line 2: Distance 0->1 and 1->2
@@ -975,10 +967,50 @@ void gateDisplay(byte gate, uint16_t x, uint16_t y) {
   display.print(gate);
 }
 
+// Setup the LEDs to flash at provided rate (0 = constantly on)
+// Usable range is 62Hz to 16MHz
+// Taken (and adapted) from https://github.com/blippy/rpi/blob/master/timer/README.md
+void doSetup() {
+  #ifdef GATE_LED_PIN
+    pinMode(GATE_LED_PIN, OUTPUT);
+
+    if(GATE_LED_RATE == 0) {}   // The LEDs will be constantly on - ne need to setup timers and switching
+    else if(GATE_LED_RATE < 62) {terminalError(F("Light Gate LED frequency must be above 62Hz"));}
+    else if(GATE_LED_RATE > 8000000) {terminalError(F("Light Gate LED frequency must be below 8MHz"));}
+    else {
+      //cli();                    // Stop interrupts
+      static const unsigned int scales[] = {1, 8, 32, 64, 128, 256, 1024};
+
+      TCCR2A = 0;
+      TCCR2B = 0;
+      TCNT2 = 0;
+
+      TCCR2A |= _BV(WGM21);     // Turn on CTC mode
+      //TIMSK2 |= (1 << OCIE2A);  // Enable timer compare interrupt
+
+      // Calculate prescaler and match register comparison
+      unsigned long frequency = GATE_LED_RATE * 2; // We're actually interested in switching frequency not whole "wave" frequency
+      unsigned int prescaler;
+      for (prescaler = 0; prescaler < 8; prescaler++) if (scales[prescaler] >= (62500 / frequency)) break;
+      OCR2A = (62500 / scales[prescaler]) * 256 / frequency; // Set Compare Match Register
+      TCCR2B += ++prescaler; // the prescaler
+
+      //sei();                    // Allow interrupts
+    }
+  #endif
+}
+
+// Toggle light gate LEDs when timer 2 overflows
+//#if GATE_LED_RATE > 0
+//  ISR(TIMER2_COMPA_vect) {
+//    digitalWrite(GATE_LED_PIN, !digitalRead(GATE_LED_PIN));
+//  }
+//#endif
+
 // Switch the IR LEDs on or off
 void irLeds(boolean state) {
   #ifdef GATE_LED_PIN
-    #ifndef GATE_LED_CONSTANT
+    #if GATE_LED_RATE > 0
       if(state) {
         TCCR2A = TCCR2A | _BV(COM2A0);  // Toggle OC2A on compare match
       } else {
