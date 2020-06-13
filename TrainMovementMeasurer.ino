@@ -113,7 +113,7 @@
 const PROGMEM uint8_t GATE_PINS[] = {5, 4, 3}; // Input pins for the light gates
 #define GATE_MODE     INPUT         // Input type for the light gates (INPUT or INPUT_PULLUP)
 #define GATE_BROKEN   HIGH          // State of the input when the gate is broken (something is present) (HIGH or LOW)
-#define GATE_LED_PIN  11            // Currently not changable from 11 !!! (it's toggled by timer 2 in hardware)
+#define GATE_LED_PIN  11            // Output pin for controlling the light gate LEDs
 #define GATE_LED_RATE 0             // Rate at which to flash the light gate LEDs (Hz, 62-8000000, 0 = constantly on)
 
 
@@ -253,9 +253,9 @@ const PROGMEM byte velocityBar[LEDS_COUNT * 4] = {
 //#define TEST_LEDS
 
 /* Use test light gates mode.
- * Line 1:  Scale and constant/frequency of IR LEDs
+ * Line 1:  LED control pin and constant/frequency of IR LEDs
  * Line 2:  Distance 0 and Distance 1
- * Line 3:  Light Gate 0, 1, 2 pins (black on white = gate blocked, white on black = gate unblocked)
+ * Line 3:  Light gates 0, 1, 2 pins (black on white = gate blocked, white on black = gate unblocked)
  * LED 0:   Light gate 0 state (green = unblocked, red = blocked)
  * LED 1:   Light gate 1 state (green = unblocked, red = blocked)
  * LED 2:   Light gate 2 state (green = unblocked, red = blocked)
@@ -860,16 +860,20 @@ void testGates() {
   display.print(F("TEST LIGHT GATES"));
   display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
 
-  // Display Line 1: Scale and IR LED's constant/flash
-  display.setCursor(col0, SCREEN_LINE_1);
-  display.print(F("1:"));
-  display.print(SCALE);
-  display.setCursor(col1, SCREEN_LINE_1);
-  #if GATE_LED_RATE == 0
-    display.print(F("Constant"));
+  // Display Line 1: LED pin and IR LED's constant/flash
+  #ifdef GATE_LED_PIN
+    display.setCursor(col0, SCREEN_LINE_1);
+    display.print(GATE_LED_PIN);
+    display.setCursor(col1, SCREEN_LINE_1);
+    #if GATE_LED_RATE == 0
+      display.print(F("Constant"));
+    #else
+      display.print(GATE_LED_RATE / 1000.0);
+      display.print(F("KHz"));
+    #endif
   #else
-    display.print(GATE_LED_RATE / 1000.0);
-    display.print(F("KHz"));
+    display.setCursor(col0, SCREEN_LINE_1);
+    display.print(F("No LED control set."));
   #endif
 
   // Display line 2: Distance 0->1 and 1->2
@@ -986,7 +990,8 @@ void doSetup() {
       TCNT2 = 0;
 
       TCCR2A |= _BV(WGM21);     // Turn on CTC mode
-      //TIMSK2 |= (1 << OCIE2A);  // Enable timer compare interrupt
+      // TIMSK2 |= _BV(OCIE2A);    // Enable timer compare interrupt
+      // TCCR2A = TCCR2A | _BV(COM2A0);  // Toggle OC2A (pin 11) on compare match
 
       // Calculate prescaler and match register comparison
       unsigned long frequency = GATE_LED_RATE * 2; // We're actually interested in switching frequency not whole "wave" frequency
@@ -1001,20 +1006,22 @@ void doSetup() {
 }
 
 // Toggle light gate LEDs when timer 2 overflows
-//#if GATE_LED_RATE > 0
-//  ISR(TIMER2_COMPA_vect) {
-//    digitalWrite(GATE_LED_PIN, !digitalRead(GATE_LED_PIN));
-//  }
-//#endif
+#if defined(GATE_LED_PIN) && GATE_LED_RATE > 0
+  ISR(TIMER2_COMPA_vect) {
+    static boolean state = true;
+    digitalWrite(GATE_LED_PIN, state);
+    state = !state;
+  }
+#endif
 
 // Switch the IR LEDs on or off
 void irLeds(boolean state) {
   #ifdef GATE_LED_PIN
     #if GATE_LED_RATE > 0
       if(state) {
-        TCCR2A = TCCR2A | _BV(COM2A0);  // Toggle OC2A on compare match
+          TIMSK2 = TIMSK2 | _BV(OCIE2A);  // Enable timer 2 compare interrupt
       } else {
-        TCCR2A = TCCR2A ^ _BV(COM2A0);  // Dont't toggle OC2A on compare match
+          TIMSK2 = TIMSK2 ^ _BV(OCIE2A);  // Disable timer 2 compare interrupt
       }
     #else
       digitalWrite(GATE_LED_PIN, state);
