@@ -89,3 +89,7 @@ With the current code this is easily achieved by:
 * Setting DISTANCE_1 to 0
 * Removing the third value from GATE_PINS
 * The following components may also be omitted from the build: R7, LED3, C3, R4, Detector connected to C3, Link between I14 and I24. Although the must be installed if in the future you decide to measure acceleration too.
+
+### Change the Logo
+
+See [Logos/README.md](Logos/README.md).
