@@ -298,7 +298,7 @@ void setup()  {
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_I2C_ADDRESS)) {
-    terminalError(F("ERROR: SSD1306 allocation failed"), false);
+    Serial.println(F("ERROR: SSD1306 allocation failed."));
   }
   display.setRotation(SCREEN_ROTATION);
   display.clearDisplay();
@@ -667,40 +667,6 @@ void showError(String message) {
   Serial.print(F("ERROR: "));
   Serial.print(message);
   Serial.println(F("."));
-}
-
-void terminalError(String message) {
-  terminalError(message, true);
-}
-void terminalError(String message, boolean useDisplay) {
-  if(useDisplay) {
-    display.clearDisplay();
-    display.dim(false);
-    display.setTextWrap(true);
-    display.setTextSize(1);
-    display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-    display.setCursor(0, 0);
-    display.print(message);
-  }
-
-  Serial.print(F("ERROR: "));
-  Serial.print(message);
-  Serial.println(F("."));
-
-  for(boolean inverted = false; true; inverted = !inverted) {
-    if(useDisplay) {
-      display.invertDisplay(inverted);
-      display.display();
-    }
-
-    for(unsigned int i = 0; i < LEDS_COUNT; i++) {
-      leds[i] = (i % 2) == inverted ? CRGB::Red : CRGB::White;
-    }
-    FastLED.show();
-
-    digitalWrite(LED_BUILTIN, !inverted);
-    delay(250);
-  }
 }
 
 void afterSetupAnimation() {
